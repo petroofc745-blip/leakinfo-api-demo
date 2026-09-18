@@ -6,7 +6,7 @@ app = FastAPI()
 
 total_api_counter = 0
 
-@app.get("/numinfo/api")
+@app.get("/leakinfo/api")
 @app.get("/api/index")
 async def num_info(
     key: str = Query("FREE", description="API Key"),
@@ -35,7 +35,7 @@ async def num_info(
     }
 
     try:
-        async with httpx.AsyncClient(timeout=12.0) as client:
+        async with httpx.AsyncClient(timeout=12.0, follow_redirects=True) as client:
             response = await client.get(target_url, headers=headers)
             
             if response.status_code != 200:
@@ -49,7 +49,12 @@ async def num_info(
             try:
                 backend_data = response.json()
             except Exception:
-                backend_data = {}
+                return {
+                    "developer": "@codderpetro",
+                    "expiry": "2026-09-20",
+                    "query": query,
+                    "result": "No data found"
+                }
 
             # Check if inner result dictionary is empty or contains no records
             inner_res = backend_data.get("result")
@@ -74,7 +79,6 @@ async def num_info(
             }
 
     except httpx.TimeoutException:
-        # If data is missing/empty, treat it as "No data found" instead of forcing timeout message unless it's a real connection drop
         return {
             "developer": "@codderpetro",
             "expiry": "2026-09-20",
@@ -82,7 +86,7 @@ async def num_info(
             "result": "No data found"
         }
         
-    except Exception as e:
+    except Exception:
         return {
             "developer": "@codderpetro",
             "expiry": "2026-09-20",
