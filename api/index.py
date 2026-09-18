@@ -6,7 +6,7 @@ app = FastAPI()
 
 total_api_counter = 0
 
-@app.get("/numinfo/api")
+@app.get("/leakinfo/api")
 @app.get("/api/index")
 async def num_info(
     key: str = Query("FREE", description="API Key"),
