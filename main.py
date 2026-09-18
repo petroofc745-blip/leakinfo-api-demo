@@ -36,30 +36,13 @@ async def num_info(
     }
 
     try:
-        async with httpx.AsyncClient(timeout=12.0) as client:
+        async with httpx.AsyncClient(timeout=15.0) as client:
             response = await client.get(target_url, headers=headers)
-            
-            if response.status_code != 200:
-                return {
-                    "developer": "@codderpetro",
-                    "expiry": "2026-09-20",
-                    "query": query,
-                    "result": "No data found"
-                }
             
             try:
                 backend_data = response.json()
             except Exception:
-                backend_data = {}
-
-            inner_res = backend_data.get("result")
-            if not backend_data or inner_res == {} or inner_res is None or (isinstance(inner_res, dict) and len(inner_res) == 0):
-                return {
-                    "developer": "@codderpetro",
-                    "expiry": "2026-09-20",
-                    "query": query,
-                    "result": "No data found"
-                }
+                backend_data = {"raw_response": response.text}
 
             if isinstance(backend_data, dict):
                 backend_data["API_Developer"] = "@codderpetro"
@@ -73,14 +56,6 @@ async def num_info(
                 "result": backend_data
             }
 
-    except httpx.TimeoutException:
-        return {
-            "developer": "@codderpetro",
-            "expiry": "2026-09-20",
-            "query": query,
-            "result": "No data found"
-        }
-        
     except Exception as e:
         return {
             "developer": "@codderpetro",
