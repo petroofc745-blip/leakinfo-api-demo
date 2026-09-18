@@ -10,7 +10,6 @@ async function handleRequest(request) {
   const expiryDate = new Date("2026-09-20");
   const todayDate = new Date();
 
-  // Expiry Check
   if (todayDate > expiryDate) {
     return new Response(JSON.stringify({
       "developer": "@codderpetro",
