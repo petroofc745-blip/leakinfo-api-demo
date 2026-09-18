@@ -1,3 +1,3 @@
-name = "petro-leakinfo-api"
+name = "petro-leakinfo-api-demo"
 main = "worker.js"
 compatibility_date = "2026-09-18"
